@@ -62,3 +62,10 @@ def test_invalid_reliability_is_rejected():
 def test_same_input_produces_same_score():
     report = sample_report()
     assert calculate_priority(report) == calculate_priority(report)
+@pytest.mark.parametrize(
+    "reliability",
+    [float("nan"), float("inf"), float("-inf"), "0.9", None, True],
+)
+def test_invalid_reliability_values_are_rejected(reliability):
+    with pytest.raises(ValueError):
+        calculate_priority(sample_report(reliability=reliability))

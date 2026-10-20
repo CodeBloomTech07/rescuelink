@@ -63,9 +63,13 @@ def _validate(report):
         raise ValueError("people_affected must be at least 1.")
     if report["vulnerable_people"] > report["people_affected"]:
         raise ValueError("Vulnerable people cannot exceed people affected.")
-    if not 0 <= report["reliability"] <= 1:
-        raise ValueError("reliability must be between 0 and 1.")
+    reliability = report["reliability"]
 
+    if isinstance(reliability, bool) or not isinstance(reliability, (int, float)):
+        raise ValueError("reliability must be numeric.")
+
+    if not isfinite(reliability) or not 0 <= reliability <= 1:
+     raise ValueError("reliability must be finite and between 0 and 1.")
 
 def calculate_priority(report):
     """Return a reproducible score, factor breakdown and review flags."""
